@@ -80,19 +80,21 @@
     <!-- Dynamic Farming Guidance Card -->
     <div class="col-md-6">
         <div class="card mb-4" style="background-color: #F5F5DC;">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0 text-center"><i class="fas fa-seedling me-2"></i>Recommended Crops & Tips</h4>
+            </div>
             <div class="card-body">
-                <h4 class="card-title text-center mb-4">Weather Guidance</h4>
-                <div class="guidance-container p-3" style="border-left: 5px solid #FF8C00;">
-                    {% if guidance %}
-                    <ul class="list-group list-group-flush">
-                        {% for item in guidance %}
-                            <li class="list-group-item" style="background-color: transparent; font-size: 0.95rem;">{{ item }}</li>
-                        {% endfor %}
-                    </ul>
-                    {% else %}
-                    <p>No specific guidance available.</p>
+                {% if guidance %}
+                {% for item in guidance %}
+                    {% if item %}
+                    <div class="guidance-item mb-3 p-3 rounded" style="background-color: white; border-left: 4px solid #6B8E23;">
+                        <p class="mb-0" style="font-size: 0.95rem;">{{ item }}</p>
+                    </div>
                     {% endif %}
-                </div>
+                {% endfor %}
+                {% else %}
+                <p class="text-center text-muted">No specific guidance available.</p>
+                {% endif %}
             </div>
         </div>
     </div>

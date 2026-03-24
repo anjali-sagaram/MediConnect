@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Disease Treatments</h1>
+
+    <form method="POST" class="mb-5">
+        <div class="row">
+            <div class="col-md-5">
+                <input type="text" name="crop" class="form-control" placeholder="Enter crop name (e.g., Rice)" required>
+            </div>
+            <div class="col-md-5">
+                <input type="text" name="disease" class="form-control" placeholder="Enter disease (e.g., Blast)" required>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Get Treatment</button>
+            </div>
+        </div>
+    </form>
+
+    {% if treatments %}
+    <div class="card">
+        <div class="card-header bg-success text-white">
+            <h4>Treatment for {{ crop }} - {{ disease }}</h4>
+        </div>
+        <div class="card-body">
+            <p class="treatment-content">{{ treatments }}</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

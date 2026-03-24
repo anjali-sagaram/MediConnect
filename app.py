@@ -24,7 +24,7 @@ WEATHER_API_KEY = "671ffb0444754181aea165917251709"
 WEATHER_BASE_URL = "http://api.weatherapi.com/v1/current.json"
 
 # ---------------- OpenRouter API ----------------
-OPENROUTER_API_KEY = "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"
+OPENROUTER_API_KEY = "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"
 
 def ask_openrouter(prompt):
     url = "https://openrouter.ai/api/v1/chat/completions"
@@ -33,7 +33,7 @@ def ask_openrouter(prompt):
         "Content-Type": "application/json"
     }
     data = {
-        "model": "mistralai/mistral-7b-instruct",
+        "model": "openai/gpt-3.5-turbo",
         "messages": [{"role": "user", "content": prompt}]
     }
     try:
@@ -90,20 +90,18 @@ def weather():
         weather_data = get_weather_data(location)
         condition = weather_data['weather'][0]['main'] if 'weather' in weather_data else "Unknown"
 
-        # Generate actionable guidance including crop suggestions using OpenRouter
         prompt = (
-            f"Provide 3 crops suitable for {condition} weather in India. "
-            "For each crop, give a short actionable tip for farming it. "
-            "Format each point as 'Crop Name: tip' without any markdown (**)."
+            f"List 3 best crops for {condition} weather in India. "
+            "For each crop, give one actionable farming tip. "
+            "Format as: Crop Name - actionable tip. No markdown or special formatting."
         )
         raw_guidance = ask_openrouter(prompt)
 
-        # Clean unwanted tags like <s>, [B_INST], [/B_INST]
-        clean_guidance = re.sub(r'(<s>|\[B_INST\]|\[/B_INST\])', '', raw_guidance)
-
-        # Split into bullet points, remove '**', and keep first 13 points
-        all_points = [line.strip().replace("**", "") for line in clean_guidance.replace('. ', '.\n').split('\n') if line.strip()]
-        guidance = all_points[0:13]
+        clean_guidance = re.sub(r'(<[^>]+>|\[B_INST\]|\[/B_INST\]|<s>|</s>)', '', raw_guidance)
+        clean_guidance = clean_guidance.replace('**', '').replace('#', '').strip()
+        
+        lines = clean_guidance.split('\n')
+        guidance = [line.strip().lstrip('1234567890.).- ').strip() for line in lines if line.strip()]
 
     return render_template('weather.html', weather=weather_data, guidance=guidance)
 
@@ -159,18 +157,24 @@ def farming_methods():
 # ---- Disease Treatments ----
 @app.route('/disease-treatments', methods=['GET', 'POST'])
 def disease_treatments():
+    treatments = None
+    crop = None
+    disease = None
+    
     if request.method == "POST":
         crop = request.form.get("crop")
         disease = request.form.get("disease")
-        prompt = f"Suggest organic disease treatments for {crop} affected by {disease} in Indian agriculture."
-        treatments = ask_openrouter(prompt)
+        prompt = (
+            f"List organic/natural disease treatments for {crop} affected by {disease} in Indian agriculture. "
+            "Provide 5-7 specific treatments with brief explanations. "
+            "Include both preventive and curative measures. "
+            "Format the response as clear bullet points or numbered list."
+        )
+        raw_treatments = ask_openrouter(prompt)
+        treatments = re.sub(r'(<[^>]+>|\[B_INST\]|\[/B_INST\]|<s>|</s>)', '', raw_treatments)
         return render_template("disease_treatments.html", treatments=treatments, crop=crop, disease=disease)
 
-    if db is None:
-        treatments = []
-    else:
-        treatments = list(db.disease_treatments.find())
-    return render_template('disease_treatments.html', treatments=treatments)
+    return render_template('disease_treatments.html', treatments=treatments, crop=crop, disease=disease)
 
 # ---- Market Prices ----
 @app.route('/market-prices', methods=['GET', 'POST'])
