@@ -1,31 +1,175 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-    <h1 class="mb-4">Disease Treatments</h1>
+<style>
+    .treatment-hero {
+        background: linear-gradient(135deg, #6B8E23 0%, #228B22 100%);
+        color: white;
+        padding: 3rem 2rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    .treatment-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    .treatment-header {
+        background: linear-gradient(135deg, #228B22 0%, #6B8E23 100%);
+        color: white;
+        padding: 1.5rem;
+    }
+    .search-box {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        margin-bottom: 2rem;
+    }
+    .input-group-text {
+        background: #6B8E23;
+        color: white;
+        border: none;
+    }
+    .form-control:focus {
+        border-color: #6B8E23;
+        box-shadow: 0 0 0 0.2rem rgba(107, 142, 35, 0.25);
+    }
+    .btn-search {
+        background: linear-gradient(135deg, #6B8E23 0%, #228B22 100%);
+        color: white;
+        border: none;
+        padding: 0.8rem 2rem;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+    .btn-search:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(107, 142, 35, 0.4);
+        color: white;
+    }
+    .treatment-item {
+        background: #f8f9fa;
+        border-left: 4px solid #6B8E23;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        transition: all 0.3s;
+    }
+    .treatment-item:hover {
+        transform: translateX(5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .treatment-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #6B8E23 0%, #228B22 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        margin-right: 1rem;
+    }
+    .note-box {
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        border: 1px solid #81c784;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+    }
+    .crop-badge {
+        background: #FF8C00;
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        display: inline-block;
+        margin-bottom: 0.5rem;
+    }
+</style>
 
-    <form method="POST" class="mb-5">
-        <div class="row">
-            <div class="col-md-5">
-                <input type="text" name="crop" class="form-control" placeholder="Enter crop name (e.g., Rice)" required>
+<div class="container">
+    <div class="treatment-hero">
+        <h1><i class="fas fa-leaf me-3"></i>Disease Treatments</h1>
+        <p class="mb-0">Get organic and natural treatment recommendations for your crops</p>
+    </div>
+
+    <div class="search-box">
+        <h4 class="mb-4 text-center"><i class="fas fa-search me-2"></i>Find Treatment</h4>
+        <form method="POST">
+            <div class="row g-3">
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-seedling"></i></span>
+                        <input type="text" name="crop" class="form-control form-control-lg" placeholder="Crop Name (e.g., Rice, Tomato)" required>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-bug"></i></span>
+                        <input type="text" name="disease" class="form-control form-control-lg" placeholder="Disease Name (e.g., Blast, Blight)" required>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-search w-100">
+                        <i class="fas fa-search me-2"></i>Search
+                    </button>
+                </div>
             </div>
-            <div class="col-md-5">
-                <input type="text" name="disease" class="form-control" placeholder="Enter disease (e.g., Blast)" required>
-            </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100">Get Treatment</button>
-            </div>
-        </div>
-    </form>
+        </form>
+    </div>
 
     {% if treatments %}
-    <div class="card">
-        <div class="card-header bg-success text-white">
-            <h4>Treatment for {{ crop }} - {{ disease }}</h4>
+    <div class="treatment-card">
+        <div class="treatment-header">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-notes-medical me-3" style="font-size: 2rem;"></i>
+                <div>
+                    <h3 class="mb-1">Treatment Recommendations</h3>
+                    <span class="crop-badge">{{ crop }}</span>
+                    <span class="badge bg-light text-dark ms-2">{{ disease }}</span>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <p class="treatment-content">{{ treatments }}</p>
+        <div class="card-body p-4">
+            <div class="row">
+                {% set lines = treatments.split('\n') %}
+                {% for line in lines %}
+                    {% if line.strip() and line.strip()|length > 10 %}
+                    <div class="col-md-6 mb-3">
+                        <div class="treatment-item">
+                            <div class="d-flex align-items-start">
+                                <div class="treatment-icon">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div>
+                                    <p class="mb-0 treatment-text">{{ line.strip() }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            
+            <div class="note-box">
+                <h5><i class="fas fa-info-circle me-2"></i>Important Note</h5>
+                <p class="mb-0">These are AI-generated organic treatment recommendations. Always consult with local agricultural experts before applying any treatment to your crops. Weather conditions and regional factors may affect treatment effectiveness.</p>
+            </div>
         </div>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <div class="mb-4">
+            <i class="fas fa-leaf" style="font-size: 4rem; color: #6B8E23; opacity: 0.3;"></i>
+        </div>
+        <h4 class="text-muted">Enter crop and disease name to get treatment recommendations</h4>
+        <p class="text-muted">Our AI will suggest organic and natural treatments for your crops</p>
     </div>
     {% endif %}
 </div>
