@@ -182,13 +182,22 @@ def disease_treatments():
 @app.route('/market-prices', methods=['GET', 'POST'])
 def market_prices():
     prices = []
+    price_data = None
+    commodity = None
+    
     if request.method == "POST":
-        symbol = request.form.get("symbol")
-        prices.append(get_commodity_price(symbol))
-    else:
-        if db is not None:
-            prices = list(db.market_prices.find().sort('date', -1))
-    return render_template('market_prices.html', prices=prices)
+        commodity = request.form.get("commodity", "").strip()
+        if commodity:
+            prompt = (
+                f"Provide current market prices in India for {commodity}. "
+                "Include: price per quintal, price per kg, recent trend (up/down/stable), "
+                "major markets where it's traded, and seasonal factors. "
+                "Format as structured information."
+            )
+            price_data = ask_openrouter(prompt)
+        return render_template('market_prices.html', prices=prices, price_data=price_data, commodity=commodity)
+    
+    return render_template('market_prices.html', prices=prices, price_data=price_data, commodity=commodity)
 
 # ---- Commodity Price ----
 @app.route('/commodity-price', methods=['GET', 'POST'])
