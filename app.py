@@ -1,17 +1,19 @@
 from flask import Flask, render_template, request
 from pymongo import MongoClient
+from dotenv import load_dotenv
 import requests
 import json
-import re  # For cleaning OpenRouter response
+import re
+import os
+
+load_dotenv()
 
 app = Flask(__name__)
 
 # ---------------- MongoDB Connection ----------------
 def get_db():
     try:
-        client = MongoClient(
-            "mongodb+srv://xyz:Shashank0708@cluster0.ze9rz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-        )
+        client = MongoClient(os.getenv("MONGO_URI"))
         return client.agriguide
     except Exception as e:
         print(f"Error connecting to MongoDB Atlas: {e}")
@@ -20,11 +22,11 @@ def get_db():
 db = get_db()
 
 # ---------------- Weather API ----------------
-WEATHER_API_KEY = "671ffb0444754181aea165917251709"
+WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
 WEATHER_BASE_URL = "http://api.weatherapi.com/v1/current.json"
 
 # ---------------- OpenRouter API ----------------
-OPENROUTER_API_KEY = "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"
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
 def ask_openrouter(prompt):
     url = "https://openrouter.ai/api/v1/chat/completions"
@@ -47,7 +49,7 @@ def ask_openrouter(prompt):
         return "Sorry, I could not fetch guidance right now."
 
 # ---------------- Commodity Price API ----------------
-COMMODITY_API_KEY = "5f055537-dc42-4757-bbcc-7e7c7bf7fcbf"
+COMMODITY_API_KEY = os.getenv("COMMODITY_API_KEY")
 COMMODITY_BASE_URL = "https://api.commoditypriceapi.com/v2/rates/latest"
 
 def get_commodity_price(symbol):
