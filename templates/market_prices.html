@@ -1,0 +1,401 @@
+{% extends 'base.html' %}
+
+{% block title %}AgriGuide - Market Prices{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2 class="text-center mb-4"><i class="fas fa-chart-line me-2"></i>Market Price Updates</h2>
+        <p class="text-center">Stay informed with the latest crop prices from local and regional markets.</p>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-8 offset-md-2">
+        <div class="card" style="background-color: #F5F5DC;">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group mb-3">
+                            <label for="regionSelect"><i class="fas fa-map-marker-alt me-2" style="color: #6B8E23;"></i>Select Region</label>
+                            <select class="form-select" id="regionSelect">
+                                <option value="all">All Regions</option>
+                                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                <option value="Telangana">Telangana</option>
+                                <option value="Karnataka">Karnataka</option>
+                                <option value="Tamil Nadu">Tamil Nadu</option>
+                                <option value="Maharashtra">Maharashtra</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group mb-3">
+                            <label for="cropTypeSelect"><i class="fas fa-seedling me-2" style="color: #6B8E23;"></i>Crop Type</label>
+                            <select class="form-select" id="cropTypeSelect">
+                                <option value="all">All Types</option>
+                                <option value="Vegetable">Vegetables</option>
+                                <option value="Fruit">Fruits</option>
+                                <option value="Grain">Grains</option>
+                                <option value="Pulse">Pulses</option>
+                                <option value="Oilseed">Oilseeds</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group mb-3">
+                            <label for="priceSearch"><i class="fas fa-search me-2" style="color: #6B8E23;"></i>Search Crop</label>
+                            <input type="text" class="form-control" id="priceSearch" placeholder="Enter crop name...">
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-12 text-end">
+                        <small class="text-muted">Last updated: <span id="lastUpdated">{% if last_updated %}{{ last_updated }}{% else %}September 17, 2023{% endif %}</span></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-hover" id="priceTable">
+                <thead style="background-color: #6B8E23; color: white;">
+                    <tr>
+                        <th scope="col">Crop</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Region</th>
+                        <th scope="col">Price (₹/kg)</th>
+                        <th scope="col">Change</th>
+                        <th scope="col">Trend</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if prices %}
+                        {% for price in prices %}
+                            <tr class="price-row" data-region="{{ price.region }}" data-type="{{ price.type }}">
+                                <td>{{ price.crop }}</td>
+                                <td>{{ price.type }}</td>
+                                <td>{{ price.region }}</td>
+                                <td>₹{{ price.price }}</td>
+                                <td>
+                                    {% if price.change > 0 %}
+                                        <span class="text-success">+{{ price.change }}%</span>
+                                    {% elif price.change < 0 %}
+                                        <span class="text-danger">{{ price.change }}%</span>
+                                    {% else %}
+                                        <span class="text-muted">0%</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="trend-chart" id="trend-{{ loop.index }}"></div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <!-- Sample data when database is empty -->
+                        <tr class="price-row" data-region="Andhra Pradesh" data-type="Vegetable">
+                            <td>Tomato</td>
+                            <td>Vegetable</td>
+                            <td>Andhra Pradesh</td>
+                            <td>₹25</td>
+                            <td><span class="text-success">+5%</span></td>
+                            <td>
+                                <div class="trend-chart" id="trend-1"></div>
+                            </td>
+                        </tr>
+                        <tr class="price-row" data-region="Karnataka" data-type="Vegetable">
+                            <td>Onion</td>
+                            <td>Vegetable</td>
+                            <td>Karnataka</td>
+                            <td>₹35</td>
+                            <td><span class="text-danger">-3%</span></td>
+                            <td>
+                                <div class="trend-chart" id="trend-2"></div>
+                            </td>
+                        </tr>
+                        <tr class="price-row" data-region="Telangana" data-type="Grain">
+                            <td>Rice (Sona Masoori)</td>
+                            <td>Grain</td>
+                            <td>Telangana</td>
+                            <td>₹52</td>
+                            <td><span class="text-success">+2%</span></td>
+                            <td>
+                                <div class="trend-chart" id="trend-3"></div>
+                            </td>
+                        </tr>
+                        <tr class="price-row" data-region="Tamil Nadu" data-type="Fruit">
+                            <td>Banana</td>
+                            <td>Fruit</td>
+                            <td>Tamil Nadu</td>
+                            <td>₹40</td>
+                            <td><span class="text-muted">0%</span></td>
+                            <td>
+                                <div class="trend-chart" id="trend-4"></div>
+                            </td>
+                        </tr>
+                        <tr class="price-row" data-region="Maharashtra" data-type="Pulse">
+                            <td>Tur Dal</td>
+                            <td>Pulse</td>
+                            <td>Maharashtra</td>
+                            <td>₹110</td>
+                            <td><span class="text-success">+8%</span></td>
+                            <td>
+                                <div class="trend-chart" id="trend-5"></div>
+                            </td>
+                        </tr>
+                        <tr class="price-row" data-region="Andhra Pradesh" data-type="Oilseed">
+                            <td>Groundnut</td>
+                            <td>Oilseed</td>
+                            <td>Andhra Pradesh</td>
+                            <td>₹75</td>
+                            <td><span class="text-danger">-2%</span></td>
+                            <td>
+                                <div class="trend-chart" id="trend-6"></div>
+                            </td>
+                        </tr>
+                        <tr class="price-row" data-region="Karnataka" data-type="Vegetable">
+                            <td>Potato</td>
+                            <td>Vegetable</td>
+                            <td>Karnataka</td>
+                            <td>₹30</td>
+                            <td><span class="text-success">+4%</span></td>
+                            <td>
+                                <div class="trend-chart" id="trend-7"></div>
+                            </td>
+                        </tr>
+                        <tr class="price-row" data-region="Telangana" data-type="Grain">
+                            <td>Wheat</td>
+                            <td>Grain</td>
+                            <td>Telangana</td>
+                            <td>₹28</td>
+                            <td><span class="text-success">+1%</span></td>
+                            <td>
+                                <div class="trend-chart" id="trend-8"></div>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-6">
+        <div class="card h-100" style="background-color: #F5F5DC;">
+            <div class="card-body">
+                <h4 class="card-title"><i class="fas fa-lightbulb me-2" style="color: #FF8C00;"></i>Market Insights</h4>
+                <div class="mt-3">
+                    <h5>Seasonal Price Patterns</h5>
+                    <p>Prices for most vegetables tend to be lower during their peak harvest seasons. Plan your planting schedule to potentially harvest when prices are historically higher.</p>
+                    
+                    <h5>Supply Chain Factors</h5>
+                    <p>Transportation costs, storage facilities, and middlemen can significantly impact final market prices. Consider direct-to-consumer selling options when possible.</p>
+                    
+                    <h5>Quality Premium</h5>
+                    <p>Organic and high-quality produce often commands a 15-30% price premium in urban markets. Consider certification if your practices already align with organic standards.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card h-100" style="background-color: #F5F5DC;">
+            <div class="card-body">
+                <h4 class="card-title"><i class="fas fa-chart-pie me-2" style="color: #FF8C00;"></i>Price Trends Analysis</h4>
+                <div id="mainCropChart" style="height: 300px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card" style="background-color: #F5F5DC;">
+            <div class="card-body">
+                <h4 class="card-title"><i class="fas fa-hand-holding-usd me-2" style="color: #6B8E23;"></i>Maximizing Your Market Value</h4>
+                
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <h5><i class="fas fa-leaf me-2" style="color: #556B2F;"></i>Quality Focus</h5>
+                        <ul>
+                            <li>Harvest at optimal maturity</li>
+                            <li>Proper sorting and grading</li>
+                            <li>Clean and attractive packaging</li>
+                            <li>Maintain cold chain where applicable</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h5><i class="fas fa-users me-2" style="color: #556B2F;"></i>Collective Marketing</h5>
+                        <ul>
+                            <li>Join farmer producer organizations</li>
+                            <li>Pool resources for transportation</li>
+                            <li>Collective bargaining power</li>
+                            <li>Shared market intelligence</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h5><i class="fas fa-mobile-alt me-2" style="color: #556B2F;"></i>Digital Marketing</h5>
+                        <ul>
+                            <li>Explore e-commerce platforms</li>
+                            <li>WhatsApp business groups</li>
+                            <li>Social media for direct marketing</li>
+                            <li>Digital payment options</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="alert alert-warning mt-4">
+                    <i class="fas fa-exclamation-circle me-2"></i> <strong>Important:</strong> Market prices can fluctuate rapidly. This data is provided for informational purposes only. Always verify current prices before making major farming decisions.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Filter functionality
+        function filterTable() {
+            const regionFilter = document.getElementById('regionSelect').value;
+            const typeFilter = document.getElementById('cropTypeSelect').value;
+            const searchFilter = document.getElementById('priceSearch').value.toUpperCase();
+            const rows = document.getElementsByClassName('price-row');
+            
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const region = row.getAttribute('data-region');
+                const type = row.getAttribute('data-type');
+                const cropName = row.cells[0].textContent.toUpperCase();
+                
+                const regionMatch = regionFilter === 'all' || region === regionFilter;
+                const typeMatch = typeFilter === 'all' || type === typeFilter;
+                const searchMatch = cropName.indexOf(searchFilter) > -1;
+                
+                if (regionMatch && typeMatch && searchMatch) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            }
+        }
+        
+        // Add event listeners to filters
+        document.getElementById('regionSelect').addEventListener('change', filterTable);
+        document.getElementById('cropTypeSelect').addEventListener('change', filterTable);
+        document.getElementById('priceSearch').addEventListener('keyup', filterTable);
+        
+        // Generate sample trend charts
+        function generateTrendCharts() {
+            const trendCharts = document.querySelectorAll('.trend-chart');
+            
+            trendCharts.forEach(chart => {
+                // Generate random trend data (in a real app, this would come from the database)
+                const trendData = [];
+                for (let i = 0; i < 7; i++) {
+                    trendData.push(Math.floor(Math.random() * 30) + 20);
+                }
+                
+                // Create a simple sparkline
+                let svg = '<svg width="100" height="30" viewBox="0 0 100 30" xmlns="http://www.w3.org/2000/svg">';
+                
+                // Calculate points for the sparkline
+                const points = [];
+                const xStep = 100 / (trendData.length - 1);
+                const max = Math.max(...trendData);
+                const min = Math.min(...trendData);
+                const range = max - min;
+                
+                for (let i = 0; i < trendData.length; i++) {
+                    const x = i * xStep;
+                    const y = 30 - ((trendData[i] - min) / range * 25);
+                    points.push(`${x},${y}`);
+                }
+                
+                // Add the sparkline path
+                const color = trendData[trendData.length - 1] >= trendData[0] ? '#6B8E23' : '#d9534f';
+                svg += `<polyline points="${points.join(' ')}" fill="none" stroke="${color}" stroke-width="2" />`;
+                
+                // Add dots for the first and last points
+                svg += `<circle cx="0" cy="${points[0].split(',')[1]}" r="3" fill="${color}" />`;
+                svg += `<circle cx="100" cy="${points[points.length - 1].split(',')[1]}" r="3" fill="${color}" />`;
+                
+                svg += '</svg>';
+                chart.innerHTML = svg;
+            });
+        }
+        
+        // Generate main crop price chart
+        function generateMainChart() {
+            const mainChart = document.getElementById('mainCropChart');
+            if (!mainChart) return;
+            
+            // Sample data for demonstration
+            const crops = ['Rice', 'Wheat', 'Tomato', 'Onion', 'Potato'];
+            const currentPrices = [52, 28, 25, 35, 30];
+            const lastMonthPrices = [50, 27, 24, 36, 29];
+            
+            // Create a simple bar chart
+            let svg = '<svg width="100%" height="100%" viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg">';
+            
+            // Add title
+            svg += '<text x="300" y="30" text-anchor="middle" font-size="16" font-weight="bold">Price Comparison: Current vs Last Month</text>';
+            
+            // Add bars
+            const barWidth = 40;
+            const spacing = 80;
+            const startX = 100;
+            const startY = 250;
+            
+            for (let i = 0; i < crops.length; i++) {
+                const x = startX + (i * spacing);
+                
+                // Current month bar
+                const currentHeight = currentPrices[i] * 3;
+                svg += `<rect x="${x}" y="${startY - currentHeight}" width="${barWidth/2}" height="${currentHeight}" fill="#6B8E23" />`;
+                
+                // Last month bar
+                const lastHeight = lastMonthPrices[i] * 3;
+                svg += `<rect x="${x + barWidth/2}" y="${startY - lastHeight}" width="${barWidth/2}" height="${lastHeight}" fill="#8B4513" />`;
+                
+                // Crop name
+                svg += `<text x="${x + barWidth/2}" y="${startY + 20}" text-anchor="middle" font-size="12">${crops[i]}</text>`;
+                
+                // Price labels
+                svg += `<text x="${x + barWidth/4}" y="${startY - currentHeight - 5}" text-anchor="middle" font-size="10">₹${currentPrices[i]}</text>`;
+                svg += `<text x="${x + 3*barWidth/4}" y="${startY - lastHeight - 5}" text-anchor="middle" font-size="10">₹${lastMonthPrices[i]}</text>`;
+            }
+            
+            // Add axes
+            svg += `<line x1="80" y1="50" x2="80" y2="${startY}" stroke="#333" stroke-width="2" />`;
+            svg += `<line x1="80" y1="${startY}" x2="550" y2="${startY}" stroke="#333" stroke-width="2" />`;
+            
+            // Add y-axis labels
+            for (let i = 0; i <= 5; i++) {
+                const y = startY - (i * 50);
+                const value = i * 20;
+                svg += `<line x1="75" y1="${y}" x2="80" y2="${y}" stroke="#333" stroke-width="1" />`;
+                svg += `<text x="70" y="${y + 5}" text-anchor="end" font-size="10">₹${value}</text>`;
+            }
+            
+            // Add legend
+            svg += '<rect x="450" y="60" width="15" height="15" fill="#6B8E23" />';
+            svg += '<text x="470" y="73" font-size="12">Current Month</text>';
+            svg += '<rect x="450" y="85" width="15" height="15" fill="#8B4513" />';
+            svg += '<text x="470" y="98" font-size="12">Last Month</text>';
+            
+            svg += '</svg>';
+            mainChart.innerHTML = svg;
+        }
+        
+        // Initialize charts
+        generateTrendCharts();
+        generateMainChart();
+    });
+</script>
+{% endblock %}

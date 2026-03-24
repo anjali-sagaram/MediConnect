@@ -1,0 +1,505 @@
+{% extends 'base.html' %}
+
+{% block title %}AgriGuide - Farming Methods{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2 class="text-center mb-4"><i class="fas fa-seedling me-2"></i>Farming Methods</h2>
+        <p class="text-center">Learn about conventional and modern farming techniques for various crops.</p>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6 offset-md-3">
+        <div class="input-group mb-3">
+            <span class="input-group-text" style="background-color: #6B8E23; color: white;">
+                <i class="fas fa-search"></i>
+            </span>
+            <input type="text" class="form-control" id="methodSearch" placeholder="Search by crop or method...">
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <ul class="nav nav-pills justify-content-center mb-4" id="methodsTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="all-tab" data-bs-toggle="pill" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true">All Methods</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="conventional-tab" data-bs-toggle="pill" data-bs-target="#conventional" type="button" role="tab" aria-controls="conventional" aria-selected="false">Conventional</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="modern-tab" data-bs-toggle="pill" data-bs-target="#modern" type="button" role="tab" aria-controls="modern" aria-selected="false">Modern/Organic</button>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="tab-content" id="methodsTabContent">
+    <!-- All Methods Tab -->
+    <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
+        <div class="row">
+            {% if methods %}
+                {% for method in methods %}
+                    <div class="col-md-6 mb-4 method-item">
+                        <div class="card h-100" style="background-color: {% if method.type == 'conventional' %}#8FBC8F{% else %}#98FB98{% endif %}; border-radius: 10px;">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    {% if method.type == 'conventional' %}
+                                        <i class="fas fa-tractor me-2"></i>
+                                    {% else %}
+                                        <i class="fas fa-leaf me-2"></i>
+                                    {% endif %}
+                                    {{ method.name }}
+                                </h5>
+                                <h6 class="card-subtitle mb-2 text-muted">For: {{ method.crop }}</h6>
+                                <p class="card-text">{{ method.description }}</p>
+                                <button class="btn btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#details{{ loop.index }}" style="background-color: #FF8C00; color: white;">
+                                    <i class="fas fa-info-circle me-1"></i> View Details
+                                </button>
+                                <div class="collapse mt-3" id="details{{ loop.index }}">
+                                    <div class="card card-body" style="background-color: rgba(255, 255, 255, 0.7);">
+                                        <h6>Steps:</h6>
+                                        <ol>
+                                            {% for step in method.steps %}
+                                                <li>{{ step }}</li>
+                                            {% endfor %}
+                                        </ol>
+                                        <h6>Benefits:</h6>
+                                        <ul>
+                                            {% for benefit in method.benefits %}
+                                                <li>{{ benefit }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                        {% if method.resources %}
+                                            <h6>Resources Needed:</h6>
+                                            <ul>
+                                                {% for resource in method.resources %}
+                                                    <li>{{ resource }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <!-- Sample Methods (when database is empty) -->
+                <!-- Conventional Method 1 -->
+                <div class="col-md-6 mb-4 method-item">
+                    <div class="card h-100" style="background-color: #8FBC8F; border-radius: 10px;">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-tractor me-2"></i>Traditional Paddy Cultivation</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">For: Rice</h6>
+                            <p class="card-text">Conventional method of growing rice in flooded fields with manual transplanting of seedlings.</p>
+                            <button class="btn btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#detailsC1" style="background-color: #FF8C00; color: white;">
+                                <i class="fas fa-info-circle me-1"></i> View Details
+                            </button>
+                            <div class="collapse mt-3" id="detailsC1">
+                                <div class="card card-body" style="background-color: rgba(255, 255, 255, 0.7);">
+                                    <h6>Steps:</h6>
+                                    <ol>
+                                        <li>Prepare nursery beds and sow seeds</li>
+                                        <li>Prepare main field with plowing and puddling</li>
+                                        <li>Transplant 20-25 day old seedlings</li>
+                                        <li>Maintain water level of 2-5 cm</li>
+                                        <li>Apply fertilizers as per recommendation</li>
+                                        <li>Harvest when 80% of grains turn golden yellow</li>
+                                    </ol>
+                                    <h6>Benefits:</h6>
+                                    <ul>
+                                        <li>Well-established method with predictable results</li>
+                                        <li>Effective weed control through flooding</li>
+                                        <li>Suitable for areas with abundant water</li>
+                                    </ul>
+                                    <h6>Resources Needed:</h6>
+                                    <ul>
+                                        <li>Abundant water supply</li>
+                                        <li>Chemical fertilizers (NPK)</li>
+                                        <li>Pesticides for pest control</li>
+                                        <li>Labor for transplanting and harvesting</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Conventional Method 2 -->
+                <div class="col-md-6 mb-4 method-item">
+                    <div class="card h-100" style="background-color: #8FBC8F; border-radius: 10px;">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-tractor me-2"></i>Furrow Irrigation</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">For: Cotton, Sugarcane</h6>
+                            <p class="card-text">Traditional method of irrigating row crops by creating channels between rows.</p>
+                            <button class="btn btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#detailsC2" style="background-color: #FF8C00; color: white;">
+                                <i class="fas fa-info-circle me-1"></i> View Details
+                            </button>
+                            <div class="collapse mt-3" id="detailsC2">
+                                <div class="card card-body" style="background-color: rgba(255, 255, 255, 0.7);">
+                                    <h6>Steps:</h6>
+                                    <ol>
+                                        <li>Prepare land with proper slope</li>
+                                        <li>Create furrows between crop rows</li>
+                                        <li>Release water at the higher end of the field</li>
+                                        <li>Allow water to flow through furrows</li>
+                                        <li>Close the inlet when water reaches the end of furrows</li>
+                                    </ol>
+                                    <h6>Benefits:</h6>
+                                    <ul>
+                                        <li>Simple and low-cost method</li>
+                                        <li>No specialized equipment needed</li>
+                                        <li>Suitable for row crops</li>
+                                    </ul>
+                                    <h6>Resources Needed:</h6>
+                                    <ul>
+                                        <li>Water source</li>
+                                        <li>Labor for creating and maintaining furrows</li>
+                                        <li>Proper field grading equipment</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Modern Method 1 -->
+                <div class="col-md-6 mb-4 method-item">
+                    <div class="card h-100" style="background-color: #98FB98; border-radius: 10px;">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-leaf me-2"></i>System of Rice Intensification (SRI)</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">For: Rice</h6>
+                            <p class="card-text">Modern method that uses less water, seeds, and chemical inputs while increasing yield.</p>
+                            <button class="btn btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#detailsM1" style="background-color: #FF8C00; color: white;">
+                                <i class="fas fa-info-circle me-1"></i> View Details
+                            </button>
+                            <div class="collapse mt-3" id="detailsM1">
+                                <div class="card card-body" style="background-color: rgba(255, 255, 255, 0.7);">
+                                    <h6>Steps:</h6>
+                                    <ol>
+                                        <li>Transplant young seedlings (8-12 days old)</li>
+                                        <li>Plant single seedlings with wider spacing (25x25 cm)</li>
+                                        <li>Apply alternate wetting and drying instead of continuous flooding</li>
+                                        <li>Use organic manures and compost</li>
+                                        <li>Perform mechanical weeding to aerate soil</li>
+                                    </ol>
+                                    <h6>Benefits:</h6>
+                                    <ul>
+                                        <li>30-50% water savings</li>
+                                        <li>85-90% seed reduction</li>
+                                        <li>Increased yield by 20-50%</li>
+                                        <li>Better root growth and stronger plants</li>
+                                        <li>Reduced methane emissions</li>
+                                    </ul>
+                                    <h6>Resources Needed:</h6>
+                                    <ul>
+                                        <li>Rotary weeder</li>
+                                        <li>Organic compost</li>
+                                        <li>Marker for precise spacing</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Modern Method 2 -->
+                <div class="col-md-6 mb-4 method-item">
+                    <div class="card h-100" style="background-color: #98FB98; border-radius: 10px;">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-leaf me-2"></i>Drip Irrigation</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">For: Vegetables, Fruits, Cotton</h6>
+                            <p class="card-text">Modern water-efficient irrigation method that delivers water directly to plant roots.</p>
+                            <button class="btn btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#detailsM2" style="background-color: #FF8C00; color: white;">
+                                <i class="fas fa-info-circle me-1"></i> View Details
+                            </button>
+                            <div class="collapse mt-3" id="detailsM2">
+                                <div class="card card-body" style="background-color: rgba(255, 255, 255, 0.7);">
+                                    <h6>Steps:</h6>
+                                    <ol>
+                                        <li>Install main line, sub-main lines, and laterals</li>
+                                        <li>Place drippers near plant roots</li>
+                                        <li>Install filters to prevent clogging</li>
+                                        <li>Set up controller for automated irrigation</li>
+                                        <li>Regularly flush the system to remove sediments</li>
+                                    </ol>
+                                    <h6>Benefits:</h6>
+                                    <ul>
+                                        <li>Water savings of 30-70%</li>
+                                        <li>Reduced weed growth</li>
+                                        <li>Improved crop quality and yield</li>
+                                        <li>Ability to apply fertilizers through the system (fertigation)</li>
+                                        <li>Reduced labor costs</li>
+                                    </ul>
+                                    <h6>Resources Needed:</h6>
+                                    <ul>
+                                        <li>Drip irrigation kit</li>
+                                        <li>Water source and pump</li>
+                                        <li>Filters and pressure regulators</li>
+                                        <li>Timer or controller (optional)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Conventional Methods Tab -->
+    <div class="tab-pane fade" id="conventional" role="tabpanel" aria-labelledby="conventional-tab">
+        <div class="row">
+            {% if methods %}
+                {% for method in methods if method.type == 'conventional' %}
+                    <div class="col-md-6 mb-4 method-item">
+                        <div class="card h-100" style="background-color: #8FBC8F; border-radius: 10px;">
+                            <!-- Same card content as in the all tab -->
+                        </div>
+                    </div>
+                {% else %}
+                    <!-- Sample Conventional Methods (when database is empty) -->
+                    <!-- Same as the conventional methods in the all tab -->
+                {% endfor %}
+            {% else %}
+                <!-- Sample Conventional Methods (when database is empty) -->
+                <div class="col-md-6 mb-4 method-item">
+                    <div class="card h-100" style="background-color: #8FBC8F; border-radius: 10px;">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-tractor me-2"></i>Traditional Paddy Cultivation</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">For: Rice</h6>
+                            <p class="card-text">Conventional method of growing rice in flooded fields with manual transplanting of seedlings.</p>
+                            <button class="btn btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#detailsC1Conv" style="background-color: #FF8C00; color: white;">
+                                <i class="fas fa-info-circle me-1"></i> View Details
+                            </button>
+                            <div class="collapse mt-3" id="detailsC1Conv">
+                                <div class="card card-body" style="background-color: rgba(255, 255, 255, 0.7);">
+                                    <h6>Steps:</h6>
+                                    <ol>
+                                        <li>Prepare nursery beds and sow seeds</li>
+                                        <li>Prepare main field with plowing and puddling</li>
+                                        <li>Transplant 20-25 day old seedlings</li>
+                                        <li>Maintain water level of 2-5 cm</li>
+                                        <li>Apply fertilizers as per recommendation</li>
+                                        <li>Harvest when 80% of grains turn golden yellow</li>
+                                    </ol>
+                                    <h6>Benefits:</h6>
+                                    <ul>
+                                        <li>Well-established method with predictable results</li>
+                                        <li>Effective weed control through flooding</li>
+                                        <li>Suitable for areas with abundant water</li>
+                                    </ul>
+                                    <h6>Resources Needed:</h6>
+                                    <ul>
+                                        <li>Abundant water supply</li>
+                                        <li>Chemical fertilizers (NPK)</li>
+                                        <li>Pesticides for pest control</li>
+                                        <li>Labor for transplanting and harvesting</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4 method-item">
+                    <div class="card h-100" style="background-color: #8FBC8F; border-radius: 10px;">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-tractor me-2"></i>Furrow Irrigation</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">For: Cotton, Sugarcane</h6>
+                            <p class="card-text">Traditional method of irrigating row crops by creating channels between rows.</p>
+                            <button class="btn btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#detailsC2Conv" style="background-color: #FF8C00; color: white;">
+                                <i class="fas fa-info-circle me-1"></i> View Details
+                            </button>
+                            <div class="collapse mt-3" id="detailsC2Conv">
+                                <div class="card card-body" style="background-color: rgba(255, 255, 255, 0.7);">
+                                    <h6>Steps:</h6>
+                                    <ol>
+                                        <li>Prepare land with proper slope</li>
+                                        <li>Create furrows between crop rows</li>
+                                        <li>Release water at the higher end of the field</li>
+                                        <li>Allow water to flow through furrows</li>
+                                        <li>Close the inlet when water reaches the end of furrows</li>
+                                    </ol>
+                                    <h6>Benefits:</h6>
+                                    <ul>
+                                        <li>Simple and low-cost method</li>
+                                        <li>No specialized equipment needed</li>
+                                        <li>Suitable for row crops</li>
+                                    </ul>
+                                    <h6>Resources Needed:</h6>
+                                    <ul>
+                                        <li>Water source</li>
+                                        <li>Labor for creating and maintaining furrows</li>
+                                        <li>Proper field grading equipment</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Modern/Organic Methods Tab -->
+    <div class="tab-pane fade" id="modern" role="tabpanel" aria-labelledby="modern-tab">
+        <div class="row">
+            {% if methods %}
+                {% for method in methods if method.type == 'modern' or method.type == 'organic' %}
+                    <div class="col-md-6 mb-4 method-item">
+                        <div class="card h-100" style="background-color: #98FB98; border-radius: 10px;">
+                            <!-- Same card content as in the all tab -->
+                        </div>
+                    </div>
+                {% else %}
+                    <!-- Sample Modern Methods (when database is empty) -->
+                    <!-- Same as the modern methods in the all tab -->
+                {% endfor %}
+            {% else %}
+                <!-- Sample Modern Methods (when database is empty) -->
+                <div class="col-md-6 mb-4 method-item">
+                    <div class="card h-100" style="background-color: #98FB98; border-radius: 10px;">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-leaf me-2"></i>System of Rice Intensification (SRI)</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">For: Rice</h6>
+                            <p class="card-text">Modern method that uses less water, seeds, and chemical inputs while increasing yield.</p>
+                            <button class="btn btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#detailsM1Mod" style="background-color: #FF8C00; color: white;">
+                                <i class="fas fa-info-circle me-1"></i> View Details
+                            </button>
+                            <div class="collapse mt-3" id="detailsM1Mod">
+                                <div class="card card-body" style="background-color: rgba(255, 255, 255, 0.7);">
+                                    <h6>Steps:</h6>
+                                    <ol>
+                                        <li>Transplant young seedlings (8-12 days old)</li>
+                                        <li>Plant single seedlings with wider spacing (25x25 cm)</li>
+                                        <li>Apply alternate wetting and drying instead of continuous flooding</li>
+                                        <li>Use organic manures and compost</li>
+                                        <li>Perform mechanical weeding to aerate soil</li>
+                                    </ol>
+                                    <h6>Benefits:</h6>
+                                    <ul>
+                                        <li>30-50% water savings</li>
+                                        <li>85-90% seed reduction</li>
+                                        <li>Increased yield by 20-50%</li>
+                                        <li>Better root growth and stronger plants</li>
+                                        <li>Reduced methane emissions</li>
+                                    </ul>
+                                    <h6>Resources Needed:</h6>
+                                    <ul>
+                                        <li>Rotary weeder</li>
+                                        <li>Organic compost</li>
+                                        <li>Marker for precise spacing</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4 method-item">
+                    <div class="card h-100" style="background-color: #98FB98; border-radius: 10px;">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-leaf me-2"></i>Drip Irrigation</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">For: Vegetables, Fruits, Cotton</h6>
+                            <p class="card-text">Modern water-efficient irrigation method that delivers water directly to plant roots.</p>
+                            <button class="btn btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#detailsM2Mod" style="background-color: #FF8C00; color: white;">
+                                <i class="fas fa-info-circle me-1"></i> View Details
+                            </button>
+                            <div class="collapse mt-3" id="detailsM2Mod">
+                                <div class="card card-body" style="background-color: rgba(255, 255, 255, 0.7);">
+                                    <h6>Steps:</h6>
+                                    <ol>
+                                        <li>Install main line, sub-main lines, and laterals</li>
+                                        <li>Place drippers near plant roots</li>
+                                        <li>Install filters to prevent clogging</li>
+                                        <li>Set up controller for automated irrigation</li>
+                                        <li>Regularly flush the system to remove sediments</li>
+                                    </ol>
+                                    <h6>Benefits:</h6>
+                                    <ul>
+                                        <li>Water savings of 30-70%</li>
+                                        <li>Reduced weed growth</li>
+                                        <li>Improved crop quality and yield</li>
+                                        <li>Ability to apply fertilizers through the system (fertigation)</li>
+                                        <li>Reduced labor costs</li>
+                                    </ul>
+                                    <h6>Resources Needed:</h6>
+                                    <ul>
+                                        <li>Drip irrigation kit</li>
+                                        <li>Water source and pump</li>
+                                        <li>Filters and pressure regulators</li>
+                                        <li>Timer or controller (optional)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-12">
+        <div class="card" style="background-color: #F5F5DC;">
+            <div class="card-body">
+                <h4 class="card-title">Choosing the Right Farming Method</h4>
+                <p>Selecting the appropriate farming method depends on various factors including your local climate, soil type, water availability, and market demand. Here are some considerations to help you decide:</p>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-tractor me-2" style="color: #6B8E23;"></i>Conventional Methods</h5>
+                        <ul>
+                            <li><strong>Advantages:</strong> Well-established, predictable results, often higher immediate yields</li>
+                            <li><strong>Disadvantages:</strong> Higher water and chemical input requirements, potential environmental impact</li>
+                            <li><strong>Best for:</strong> Farmers with abundant water, access to inputs, and established markets</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-leaf me-2" style="color: #6B8E23;"></i>Modern/Organic Methods</h5>
+                        <ul>
+                            <li><strong>Advantages:</strong> Resource efficiency, environmental sustainability, premium market prices</li>
+                            <li><strong>Disadvantages:</strong> May require new skills, initial investment, and transition period</li>
+                            <li><strong>Best for:</strong> Areas with water scarcity, environmentally sensitive regions, premium markets</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="alert alert-info mt-4">
+                    <i class="fas fa-info-circle me-2"></i> Consider starting with a small plot to test new methods before implementing them across your entire farm.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Search functionality for farming methods
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('methodSearch');
+        if (searchInput) {
+            searchInput.addEventListener('keyup', function() {
+                const filter = this.value.toUpperCase();
+                const items = document.getElementsByClassName('method-item');
+                
+                for (let i = 0; i < items.length; i++) {
+                    const txtValue = items[i].textContent || items[i].innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        items[i].style.display = "";
+                    } else {
+                        items[i].style.display = "none";
+                    }
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

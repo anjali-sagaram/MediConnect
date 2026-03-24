@@ -1,0 +1,495 @@
+{% extends 'base.html' %}
+
+{% block title %}AgriGuide - Eco-Friendly Practices{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2 class="text-center mb-4"><i class="fas fa-leaf me-2"></i>Environmentally Friendly Practices</h2>
+        <p class="text-center">Sustainable farming techniques to protect our environment and improve crop yields.</p>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6 offset-md-3">
+        <div class="input-group mb-3">
+            <span class="input-group-text" style="background-color: #6B8E23; color: white;">
+                <i class="fas fa-search"></i>
+            </span>
+            <input type="text" class="form-control" id="ecoSearch" placeholder="Search eco-friendly practices...">
+        </div>
+    </div>
+</div>
+
+<!-- Category Navigation -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <ul class="nav nav-pills justify-content-center" id="ecoPracticesTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="all-tab" data-bs-toggle="pill" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true">
+                    <i class="fas fa-globe me-1"></i> All Practices
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="water-tab" data-bs-toggle="pill" data-bs-target="#water" type="button" role="tab" aria-controls="water" aria-selected="false">
+                    <i class="fas fa-tint me-1"></i> Water Conservation
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="soil-tab" data-bs-toggle="pill" data-bs-target="#soil" type="button" role="tab" aria-controls="soil" aria-selected="false">
+                    <i class="fas fa-seedling me-1"></i> Soil Health
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pest-tab" data-bs-toggle="pill" data-bs-target="#pest" type="button" role="tab" aria-controls="pest" aria-selected="false">
+                    <i class="fas fa-bug me-1"></i> Natural Pest Control
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="energy-tab" data-bs-toggle="pill" data-bs-target="#energy" type="button" role="tab" aria-controls="energy" aria-selected="false">
+                    <i class="fas fa-sun me-1"></i> Energy Efficiency
+                </button>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!-- Practice Cards -->
+<div class="tab-content" id="ecoPracticesTabContent">
+    <!-- All Practices Tab -->
+    <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
+        <div class="row" id="allPractices">
+            {% if practices %}
+                {% for practice in practices %}
+                    <div class="col-md-4 mb-4 eco-item" data-category="{{ practice.category }}">
+                        <div class="card h-100" style="background-color: #F5F5DC;">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    {% if practice.category == 'water' %}
+                                        <i class="fas fa-tint fa-2x me-3" style="color: #4682B4;"></i>
+                                    {% elif practice.category == 'soil' %}
+                                        <i class="fas fa-seedling fa-2x me-3" style="color: #8B4513;"></i>
+                                    {% elif practice.category == 'pest' %}
+                                        <i class="fas fa-bug fa-2x me-3" style="color: #556B2F;"></i>
+                                    {% elif practice.category == 'energy' %}
+                                        <i class="fas fa-sun fa-2x me-3" style="color: #FF8C00;"></i>
+                                    {% else %}
+                                        <i class="fas fa-leaf fa-2x me-3" style="color: #6B8E23;"></i>
+                                    {% endif %}
+                                    <h5 class="card-title mb-0">{{ practice.name }}</h5>
+                                </div>
+                                <p class="card-text">{{ practice.description }}</p>
+                                <h6 class="mt-3">Benefits:</h6>
+                                <ul>
+                                    {% for benefit in practice.benefits %}
+                                        <li>{{ benefit }}</li>
+                                    {% endfor %}
+                                </ul>
+                                <h6 class="mt-3">Suitable for:</h6>
+                                <p>
+                                    {% for crop in practice.suitable_crops %}
+                                        <span class="badge bg-success me-1 mb-1">{{ crop }}</span>
+                                    {% endfor %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <!-- Sample Eco-Friendly Practices (when database is empty) -->
+                
+                <!-- Water Conservation Practices -->
+                <div class="col-md-4 mb-4 eco-item" data-category="water">
+                    <div class="card h-100" style="background-color: #F5F5DC;">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-tint fa-2x me-3" style="color: #4682B4;"></i>
+                                <h5 class="card-title mb-0">Drip Irrigation</h5>
+                            </div>
+                            <p class="card-text">A water-efficient irrigation method that delivers water directly to the plant's root zone through a network of valves, pipes, tubing, and emitters.</p>
+                            <h6 class="mt-3">Benefits:</h6>
+                            <ul>
+                                <li>Reduces water usage by up to 60% compared to flood irrigation</li>
+                                <li>Minimizes soil erosion and nutrient leaching</li>
+                                <li>Decreases weed growth between plant rows</li>
+                                <li>Allows for precise fertilizer application (fertigation)</li>
+                            </ul>
+                            <h6 class="mt-3">Suitable for:</h6>
+                            <p>
+                                <span class="badge bg-success me-1 mb-1">Vegetables</span>
+                                <span class="badge bg-success me-1 mb-1">Fruit trees</span>
+                                <span class="badge bg-success me-1 mb-1">Row crops</span>
+                                <span class="badge bg-success me-1 mb-1">Vineyards</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4 eco-item" data-category="water">
+                    <div class="card h-100" style="background-color: #F5F5DC;">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-tint fa-2x me-3" style="color: #4682B4;"></i>
+                                <h5 class="card-title mb-0">Rainwater Harvesting</h5>
+                            </div>
+                            <p class="card-text">Collection and storage of rainwater from rooftops, land surfaces, or rock catchments for agricultural use during water-scarce periods.</p>
+                            <h6 class="mt-3">Benefits:</h6>
+                            <ul>
+                                <li>Provides water during dry spells</li>
+                                <li>Reduces dependence on groundwater</li>
+                                <li>Helps control soil erosion and flooding</li>
+                                <li>Improves groundwater recharge</li>
+                            </ul>
+                            <h6 class="mt-3">Suitable for:</h6>
+                            <p>
+                                <span class="badge bg-success me-1 mb-1">All crops</span>
+                                <span class="badge bg-success me-1 mb-1">Especially rainfed areas</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Soil Health Practices -->
+                <div class="col-md-4 mb-4 eco-item" data-category="soil">
+                    <div class="card h-100" style="background-color: #F5F5DC;">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-seedling fa-2x me-3" style="color: #8B4513;"></i>
+                                <h5 class="card-title mb-0">Composting</h5>
+                            </div>
+                            <p class="card-text">The process of decomposing organic materials like crop residues, kitchen waste, and animal manure into a rich soil amendment.</p>
+                            <h6 class="mt-3">Benefits:</h6>
+                            <ul>
+                                <li>Improves soil structure and water retention</li>
+                                <li>Provides slow-release nutrients</li>
+                                <li>Increases beneficial soil microorganisms</li>
+                                <li>Reduces waste and greenhouse gas emissions</li>
+                            </ul>
+                            <h6 class="mt-3">Suitable for:</h6>
+                            <p>
+                                <span class="badge bg-success me-1 mb-1">All crops</span>
+                                <span class="badge bg-success me-1 mb-1">Especially vegetables</span>
+                                <span class="badge bg-success me-1 mb-1">Fruit trees</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4 eco-item" data-category="soil">
+                    <div class="card h-100" style="background-color: #F5F5DC;">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-seedling fa-2x me-3" style="color: #8B4513;"></i>
+                                <h5 class="card-title mb-0">Cover Cropping</h5>
+                            </div>
+                            <p class="card-text">Planting specific crops like legumes, grasses, or brassicas between main crop seasons to protect and improve soil.</p>
+                            <h6 class="mt-3">Benefits:</h6>
+                            <ul>
+                                <li>Prevents soil erosion</li>
+                                <li>Suppresses weeds naturally</li>
+                                <li>Adds organic matter to soil</li>
+                                <li>Legume cover crops fix nitrogen</li>
+                                <li>Breaks pest and disease cycles</li>
+                            </ul>
+                            <h6 class="mt-3">Suitable for:</h6>
+                            <p>
+                                <span class="badge bg-success me-1 mb-1">Row crops</span>
+                                <span class="badge bg-success me-1 mb-1">Vegetable rotations</span>
+                                <span class="badge bg-success me-1 mb-1">Orchards</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pest Control Practices -->
+                <div class="col-md-4 mb-4 eco-item" data-category="pest">
+                    <div class="card h-100" style="background-color: #F5F5DC;">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-bug fa-2x me-3" style="color: #556B2F;"></i>
+                                <h5 class="card-title mb-0">Companion Planting</h5>
+                            </div>
+                            <p class="card-text">Growing different plants together that benefit each other by repelling pests, attracting beneficial insects, or providing nutrients.</p>
+                            <h6 class="mt-3">Benefits:</h6>
+                            <ul>
+                                <li>Reduces pest problems naturally</li>
+                                <li>Increases biodiversity</li>
+                                <li>Improves pollination</li>
+                                <li>Maximizes space utilization</li>
+                            </ul>
+                            <h6 class="mt-3">Suitable for:</h6>
+                            <p>
+                                <span class="badge bg-success me-1 mb-1">Vegetables</span>
+                                <span class="badge bg-success me-1 mb-1">Herbs</span>
+                                <span class="badge bg-success me-1 mb-1">Small-scale farming</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4 eco-item" data-category="pest">
+                    <div class="card h-100" style="background-color: #F5F5DC;">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-bug fa-2x me-3" style="color: #556B2F;"></i>
+                                <h5 class="card-title mb-0">Neem-Based Pest Control</h5>
+                            </div>
+                            <p class="card-text">Using extracts from the neem tree (Azadirachta indica) as a natural insecticide and fungicide for crop protection.</p>
+                            <h6 class="mt-3">Benefits:</h6>
+                            <ul>
+                                <li>Controls over 200 species of pests</li>
+                                <li>Biodegradable and non-toxic to humans</li>
+                                <li>Doesn't harm beneficial insects like bees and butterflies</li>
+                                <li>Reduces pest resistance issues</li>
+                            </ul>
+                            <h6 class="mt-3">Suitable for:</h6>
+                            <p>
+                                <span class="badge bg-success me-1 mb-1">Vegetables</span>
+                                <span class="badge bg-success me-1 mb-1">Fruits</span>
+                                <span class="badge bg-success me-1 mb-1">Grains</span>
+                                <span class="badge bg-success me-1 mb-1">Cotton</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Energy Efficiency Practices -->
+                <div class="col-md-4 mb-4 eco-item" data-category="energy">
+                    <div class="card h-100" style="background-color: #F5F5DC;">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-sun fa-2x me-3" style="color: #FF8C00;"></i>
+                                <h5 class="card-title mb-0">Solar-Powered Irrigation</h5>
+                            </div>
+                            <p class="card-text">Using solar panels to power water pumps for irrigation, reducing dependence on grid electricity or diesel generators.</p>
+                            <h6 class="mt-3">Benefits:</h6>
+                            <ul>
+                                <li>Reduces energy costs over time</li>
+                                <li>Zero carbon emissions</li>
+                                <li>Reliable in sunny regions</li>
+                                <li>Low maintenance requirements</li>
+                                <li>Can work in remote areas without electricity</li>
+                            </ul>
+                            <h6 class="mt-3">Suitable for:</h6>
+                            <p>
+                                <span class="badge bg-success me-1 mb-1">All irrigated crops</span>
+                                <span class="badge bg-success me-1 mb-1">Especially in sunny regions</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4 eco-item" data-category="energy">
+                    <div class="card h-100" style="background-color: #F5F5DC;">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-sun fa-2x me-3" style="color: #FF8C00;"></i>
+                                <h5 class="card-title mb-0">Biogas Production</h5>
+                            </div>
+                            <p class="card-text">Converting farm waste like animal manure and crop residues into biogas through anaerobic digestion, providing a renewable energy source.</p>
+                            <h6 class="mt-3">Benefits:</h6>
+                            <ul>
+                                <li>Produces renewable energy for cooking, heating, or electricity</li>
+                                <li>Reduces methane emissions from decomposing waste</li>
+                                <li>Creates nutrient-rich bioslurry as a byproduct for fertilizer</li>
+                                <li>Improves waste management on farms</li>
+                            </ul>
+                            <h6 class="mt-3">Suitable for:</h6>
+                            <p>
+                                <span class="badge bg-success me-1 mb-1">Livestock farms</span>
+                                <span class="badge bg-success me-1 mb-1">Mixed farming systems</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Water Conservation Tab -->
+    <div class="tab-pane fade" id="water" role="tabpanel" aria-labelledby="water-tab">
+        <div class="row" id="waterPractices"></div>
+    </div>
+    
+    <!-- Soil Health Tab -->
+    <div class="tab-pane fade" id="soil" role="tabpanel" aria-labelledby="soil-tab">
+        <div class="row" id="soilPractices"></div>
+    </div>
+    
+    <!-- Natural Pest Control Tab -->
+    <div class="tab-pane fade" id="pest" role="tabpanel" aria-labelledby="pest-tab">
+        <div class="row" id="pestPractices"></div>
+    </div>
+    
+    <!-- Energy Efficiency Tab -->
+    <div class="tab-pane fade" id="energy" role="tabpanel" aria-labelledby="energy-tab">
+        <div class="row" id="energyPractices"></div>
+    </div>
+</div>
+
+<!-- Eco-Farming Success Story -->
+<div class="row mt-5">
+    <div class="col-md-12">
+        <div class="card" style="background-color: #F5F5DC;">
+            <div class="card-body">
+                <h4 class="card-title"><i class="fas fa-award me-2" style="color: #FF8C00;"></i>Success Story: Sustainable Farming Transformation</h4>
+                <div class="row mt-3">
+                    <div class="col-md-8">
+                        <p>Ramesh Kumar, a farmer from Karnataka, transformed his 5-acre farm using multiple eco-friendly practices. By implementing drip irrigation, composting, and integrated pest management, he achieved:</p>
+                        <ul>
+                            <li><strong>40% reduction</strong> in water usage</li>
+                            <li><strong>30% increase</strong> in crop yield</li>
+                            <li><strong>60% decrease</strong> in chemical pesticide use</li>
+                            <li><strong>₹45,000 annual savings</strong> on input costs</li>
+                        </ul>
+                        <p>His farm now serves as a model for sustainable agriculture in his region, demonstrating that eco-friendly practices can be both environmentally beneficial and economically viable.</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="p-3 rounded" style="background-color: #6B8E23; color: white;">
+                            <h5>Key Implementation Steps</h5>
+                            <ol class="text-start">
+                                <li>Started with soil testing and improvement</li>
+                                <li>Installed drip irrigation system</li>
+                                <li>Established composting system</li>
+                                <li>Introduced beneficial insects</li>
+                                <li>Added solar pumps for irrigation</li>
+                            </ol>
+                            <p class="mt-3 mb-0"><em>"The transition took 2 years, but the benefits will last generations."</em></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Getting Started Guide -->
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card" style="background-color: #F5F5DC;">
+            <div class="card-body">
+                <h4 class="card-title"><i class="fas fa-seedling me-2" style="color: #6B8E23;"></i>Getting Started with Eco-Friendly Farming</h4>
+                
+                <div class="row mt-3">
+                    <div class="col-md-3 mb-3">
+                        <div class="card h-100" style="background-color: #F8F8F0;">
+                            <div class="card-body text-center">
+                                <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; background-color: #6B8E23; color: white;">
+                                    <h3 class="mb-0">1</h3>
+                                </div>
+                                <h5>Assess Your Farm</h5>
+                                <p>Conduct soil tests, water availability assessment, and identify current environmental challenges.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card h-100" style="background-color: #F8F8F0;">
+                            <div class="card-body text-center">
+                                <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; background-color: #6B8E23; color: white;">
+                                    <h3 class="mb-0">2</h3>
+                                </div>
+                                <h5>Start Small</h5>
+                                <p>Begin with one or two practices on a portion of your land before scaling up.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card h-100" style="background-color: #F8F8F0;">
+                            <div class="card-body text-center">
+                                <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; background-color: #6B8E23; color: white;">
+                                    <h3 class="mb-0">3</h3>
+                                </div>
+                                <h5>Learn & Connect</h5>
+                                <p>Join farmer groups, attend workshops, and connect with agricultural extension services.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card h-100" style="background-color: #F8F8F0;">
+                            <div class="card-body text-center">
+                                <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; background-color: #6B8E23; color: white;">
+                                    <h3 class="mb-0">4</h3>
+                                </div>
+                                <h5>Monitor & Adapt</h5>
+                                <p>Keep records, observe changes, and adjust practices based on results and seasonal variations.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="alert alert-success mt-4">
+                    <i class="fas fa-lightbulb me-2"></i> <strong>Remember:</strong> Transitioning to eco-friendly farming is a journey, not a destination. Each small step contributes to a more sustainable and resilient agricultural system.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Search functionality
+        const searchInput = document.getElementById('ecoSearch');
+        if (searchInput) {
+            searchInput.addEventListener('keyup', function() {
+                const filter = this.value.toUpperCase();
+                const items = document.getElementsByClassName('eco-item');
+                
+                for (let i = 0; i < items.length; i++) {
+                    const txtValue = items[i].textContent || items[i].innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        items[i].style.display = "";
+                    } else {
+                        items[i].style.display = "none";
+                    }
+                }
+            });
+        }
+        
+        // Category filtering
+        function filterByCategory() {
+            // Clone items from the "All" tab to their respective category tabs
+            const waterItems = document.querySelectorAll('.eco-item[data-category="water"]');
+            const soilItems = document.querySelectorAll('.eco-item[data-category="soil"]');
+            const pestItems = document.querySelectorAll('.eco-item[data-category="pest"]');
+            const energyItems = document.querySelectorAll('.eco-item[data-category="energy"]');
+            
+            const waterContainer = document.getElementById('waterPractices');
+            const soilContainer = document.getElementById('soilPractices');
+            const pestContainer = document.getElementById('pestPractices');
+            const energyContainer = document.getElementById('energyPractices');
+            
+            // Clear containers first
+            waterContainer.innerHTML = '';
+            soilContainer.innerHTML = '';
+            pestContainer.innerHTML = '';
+            energyContainer.innerHTML = '';
+            
+            // Clone and append items to their respective category tabs
+            waterItems.forEach(item => {
+                const clone = item.cloneNode(true);
+                waterContainer.appendChild(clone);
+            });
+            
+            soilItems.forEach(item => {
+                const clone = item.cloneNode(true);
+                soilContainer.appendChild(clone);
+            });
+            
+            pestItems.forEach(item => {
+                const clone = item.cloneNode(true);
+                pestContainer.appendChild(clone);
+            });
+            
+            energyItems.forEach(item => {
+                const clone = item.cloneNode(true);
+                energyContainer.appendChild(clone);
+            });
+        }
+        
+        // Initialize category filtering
+        filterByCategory();
+    });
+</script>
+{% endblock %}

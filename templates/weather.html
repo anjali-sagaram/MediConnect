@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}AgriGuide - Weather Guidance{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2 class="text-center mb-4"><i class="fas fa-cloud-sun me-2"></i>Weather-Based Farming Guidance</h2>
+        <p class="text-center">Get real-time weather updates and actionable farming recommendations based on current conditions.</p>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-md-6 offset-md-3">
+        <div class="card" style="background-color: #F5F5DC;">
+            <div class="card-body">
+                <h5 class="card-title text-center">Check Weather for Your Location</h5>
+                <form action="{{ url_for('weather') }}" method="post" class="mt-3">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Enter your location (e.g., Hyderabad)" name="location" required>
+                        <button class="btn" type="submit" style="background-color: #FF8C00; color: white;">
+                            <i class="fas fa-search me-1"></i> Get Weather
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if weather %}
+<div class="row">
+    <!-- Weather Display Card -->
+    <div class="col-md-6">
+        <div class="card mb-4" style="background-color: #6B8E23; color: white;">
+            <div class="card-body text-center">
+                {% if error %}
+                <div class="alert alert-warning">
+                    <p class="translate">{{ error }}</p>
+                </div>
+                {% endif %}
+                <h3 class="card-title">{{ weather.name }}, {{ weather.sys.country }}</h3>
+                <div class="weather-display my-4">
+                    {% set condition = weather.weather[0].main %}
+                    {% if condition == 'Clear' %}
+                        <i class="fas fa-sun fa-4x mb-3"></i>
+                    {% elif condition == 'Clouds' %}
+                        <i class="fas fa-cloud fa-4x mb-3"></i>
+                    {% elif condition == 'Rain' or condition == 'Drizzle' %}
+                        <i class="fas fa-cloud-rain fa-4x mb-3"></i>
+                    {% elif condition == 'Thunderstorm' %}
+                        <i class="fas fa-bolt fa-4x mb-3"></i>
+                    {% elif condition == 'Snow' %}
+                        <i class="fas fa-snowflake fa-4x mb-3"></i>
+                    {% else %}
+                        <i class="fas fa-smog fa-4x mb-3"></i>
+                    {% endif %}
+                    <h4 id="weather-condition">{{ weather.weather[0].main }}</h4>
+                    <p class="lead">{{ weather.weather[0].description|capitalize }}</p>
+                    <h2 class="display-4">{{ weather.main.temp }}°C</h2>
+                    <div class="row mt-3">
+                        <div class="col-4">
+                            <p><i class="fas fa-tint me-2"></i> {{ weather.main.humidity }}%</p>
+                            <small>Humidity</small>
+                        </div>
+                        <div class="col-4">
+                            <p><i class="fas fa-wind me-2"></i> {{ weather.wind.speed }} m/s</p>
+                            <small>Wind</small>
+                        </div>
+                        <div class="col-4">
+                            <p><i class="fas fa-compress-arrows-alt me-2"></i> {{ weather.main.pressure }} hPa</p>
+                            <small>Pressure</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dynamic Farming Guidance Card -->
+    <div class="col-md-6">
+        <div class="card mb-4" style="background-color: #F5F5DC;">
+            <div class="card-body">
+                <h4 class="card-title text-center mb-4">Weather Guidance</h4>
+                <div class="guidance-container p-3" style="border-left: 5px solid #FF8C00;">
+                    {% if guidance %}
+                    <ul class="list-group list-group-flush">
+                        {% for item in guidance %}
+                            <li class="list-group-item" style="background-color: transparent; font-size: 0.95rem;">{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p>No specific guidance available.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+
+<!-- Weather-Based Farming Tips Section -->
+<div class="row mt-5">
+    <div class="col-md-12">
+        <div class="card" style="background-color: #F5F5DC;">
+            <div class="card-body">
+                <h4 class="card-title">Weather-Based Farming Tips</h4>
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-seedling me-2" style="color: #6B8E23;"></i>Crop Selection</h5>
+                        <p>Choose crops that are well-suited to your local climate and seasonal weather patterns. Consider drought-resistant varieties in areas with limited rainfall.</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-tint me-2" style="color: #4682B4;"></i>Water Management</h5>
+                        <p>Implement efficient irrigation systems like drip irrigation. Collect rainwater during monsoon seasons for use during dry periods.</p>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-shield-alt me-2" style="color: #8B4513;"></i>Crop Protection</h5>
+                        <p>Use weather forecasts to time pesticide and fungicide applications. Apply before rain to allow time for drying, but not immediately before heavy rainfall.</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-calendar-alt me-2" style="color: #FF8C00;"></i>Planting Calendar</h5>
+                        <p>Develop a seasonal planting calendar based on historical weather patterns in your region. Adjust planting dates based on current weather forecasts.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

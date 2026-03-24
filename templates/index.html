@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block title %}AgriGuide - Home{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 text-center mb-4">
+        <h1 class="display-4 translate">Welcome to AgriGuide</h1>
+        <p class="lead translate">Empowering farmers with knowledge for better yields and sustainable practices</p>
+        <button class="btn voice-readout-btn" style="background-color: #FF8C00; color: white;" data-target="main-content">
+            <i class="fas fa-volume-up me-1"></i> <span class="translate">Read Aloud</span>
+        </button>
+    </div>
+</div>
+
+<div id="main-content" class="content-section">
+
+<div class="row mb-4">
+    <div class="col-md-6 offset-md-3">
+        <div class="card" style="background-color: #F5F5DC;">
+            <div class="card-body text-center">
+                <h5 class="card-title">Check Weather Guidance</h5>
+                <p class="card-text">Get weather-based farming recommendations for your location</p>
+                <form action="{{ url_for('weather') }}" method="post" class="mt-3">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Enter your location" name="location" required>
+                        <button class="btn" type="submit" style="background-color: #FF8C00; color: white;">
+                            <i class="fas fa-search me-1"></i> Get Guidance
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Weather Guidance -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100" style="background-color: #F5F5DC;">
+            <div class="card-body text-center">
+                <i class="fas fa-cloud-sun fa-3x mb-3" style="color: #6B8E23;"></i>
+                <h5 class="card-title">Weather Guidance</h5>
+                <p class="card-text">Get real-time weather updates and farming recommendations based on current conditions.</p>
+                <a href="{{ url_for('weather') }}" class="btn" style="background-color: #FF8C00; color: white;">
+                    <i class="fas fa-arrow-right me-1"></i> Explore
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Farming Methods -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100" style="background-color: #F5F5DC;">
+            <div class="card-body text-center">
+                <i class="fas fa-seedling fa-3x mb-3" style="color: #6B8E23;"></i>
+                <h5 class="card-title">Farming Methods</h5>
+                <p class="card-text">Learn about conventional and modern farming techniques for various crops.</p>
+                <a href="{{ url_for('farming_methods') }}" class="btn" style="background-color: #FF8C00; color: white;">
+                    <i class="fas fa-arrow-right me-1"></i> Explore
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Disease Treatments -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100" style="background-color: #F5F5DC;">
+            <div class="card-body text-center">
+                <i class="fas fa-bug fa-3x mb-3" style="color: #6B8E23;"></i>
+                <h5 class="card-title">Disease Treatments</h5>
+                <p class="card-text">Discover organic remedies and preventive measures for common crop diseases.</p>
+                <a href="{{ url_for('disease_treatments') }}" class="btn" style="background-color: #FF8C00; color: white;">
+                    <i class="fas fa-arrow-right me-1"></i> Explore
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Market Prices -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100" style="background-color: #F5F5DC;">
+            <div class="card-body text-center">
+                <i class="fas fa-rupee-sign fa-3x mb-3" style="color: #6B8E23;"></i>
+                <h5 class="card-title">Market Prices</h5>
+                <p class="card-text">Stay updated with daily crop prices from local and regional markets.</p>
+                <a href="{{ url_for('market_prices') }}" class="btn" style="background-color: #FF8C00; color: white;">
+                    <i class="fas fa-arrow-right me-1"></i> Explore
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Eco Practices -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100" style="background-color: #F5F5DC;">
+            <div class="card-body text-center">
+                <i class="fas fa-recycle fa-3x mb-3" style="color: #6B8E23;"></i>
+                <h5 class="card-title">Eco-Friendly Practices</h5>
+                <p class="card-text">Learn about sustainable farming practices that are good for the environment.</p>
+                <a href="{{ url_for('eco_practices') }}" class="btn" style="background-color: #FF8C00; color: white;">
+                    <i class="fas fa-arrow-right me-1"></i> Explore
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Voice Readout -->
+    <div class="col-md-4 mb-4">
+        <div class="card h-100" style="background-color: #F5F5DC;">
+            <div class="card-body text-center">
+                <i class="fas fa-volume-up fa-3x mb-3" style="color: #6B8E23;"></i>
+                <h5 class="card-title">Voice Readout</h5>
+                <p class="card-text">Listen to the content in your preferred language for easier understanding.</p>
+                <button class="btn voice-readout-btn" style="background-color: #FF8C00; color: white;">
+                    <i class="fas fa-play me-1"></i> <span class="translate">Start Listening</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</div> <!-- Close main-content div -->
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Voice readout functionality is implemented in translation.js
+</script>
+{% endblock %}

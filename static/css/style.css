@@ -1,0 +1,170 @@
+/* AgriGuide Main Stylesheet */
+
+/* Color Palette */
+:root {
+    --primary-bg: #F5F5DC;    /* Beige / Light Sand - 70% */
+    --secondary-color: #6B8E23; /* Olive Green - 20% */
+    --accent-color: #FF8C00;   /* Dark Orange - 10% */
+    --hover-color: #556B2F;    /* Darker Green for hover */
+    --header-color: #8B4513;   /* Brown for headers */
+    --text-on-dark: #FFFFFF;   /* White text on colored backgrounds */
+    --text-on-light: #333333;  /* Dark text on light backgrounds */
+}
+
+/* Global Styles */
+body {
+    background-color: var(--primary-bg);
+    color: var(--text-on-light);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Headers */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--header-color);
+}
+
+/* Links */
+a {
+    color: var(--secondary-color);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--hover-color);
+    text-decoration: underline;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    color: var(--text-on-dark);
+}
+
+.btn-primary:hover {
+    background-color: var(--hover-color);
+    border-color: var(--hover-color);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: var(--text-on-dark);
+}
+
+.btn-secondary:hover {
+    background-color: var(--hover-color);
+    border-color: var(--hover-color);
+}
+
+/* Cards */
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Navbar */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+/* Footer */
+footer a:hover {
+    color: var(--primary-bg) !important;
+}
+
+/* Weather Icons */
+.weather-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+/* Price Changes */
+.price-up {
+    color: green;
+}
+
+.price-down {
+    color: red;
+}
+
+.price-same {
+    color: gray;
+}
+
+/* Farming Method Cards */
+.conventional-method {
+    background-color: #8FBC8F; /* Dark Sea Green */
+}
+
+.modern-method {
+    background-color: #98FB98; /* Pale Green */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+    
+    .card {
+        margin-bottom: 20px;
+    }
+}
+
+/* Language Selector */
+.dropdown-menu {
+    min-width: 10rem;
+}
+
+.dropdown-item:hover {
+    background-color: var(--secondary-color);
+    color: var(--text-on-dark);
+}
+
+/* Voice Readout Button */
+#voice-readout-btn {
+    transition: all 0.3s ease;
+}
+
+#voice-readout-btn:hover {
+    transform: scale(1.05);
+}
+
+/* Weather Guidance Icons */
+.guidance-icon {
+    font-size: 2rem;
+    margin-right: 1rem;
+}
+
+/* Market Price Table */
+.price-table th {
+    background-color: var(--secondary-color);
+    color: var(--text-on-dark);
+}
+
+.price-table tr:nth-child(even) {
+    background-color: rgba(107, 142, 35, 0.1);
+}
+
+/* Disease Treatment Cards */
+.disease-card {
+    border-left: 5px solid var(--secondary-color);
+}
+
+/* Eco Practice Icons */
+.eco-icon {
+    color: var(--secondary-color);
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
